@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "kaiten": {
+      "command": "npx",
+      "args": ["-y", "@theyahia/kaiten-mcp"],
+      "env": {
+        "KAITEN_DOMAIN": "",
+        "KAITEN_TOKEN": ""
+      }
+    }
+  }
+}
