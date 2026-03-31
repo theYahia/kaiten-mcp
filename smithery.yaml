@@ -1,0 +1,23 @@
+# Smithery configuration for kaiten-mcp
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required:
+      - KAITEN_TOKEN
+    properties:
+      KAITEN_TOKEN:
+        type: string
+        description: "API-токен Kaiten (из настроек профиля)"
+      KAITEN_DOMAIN:
+        type: string
+        description: "Поддомен Kaiten (например 'acme' для acme.kaiten.ru). Если не указан, используется mykaiten.ru"
+  commandFunction: |-
+    (config) => ({
+      command: "npx",
+      args: ["-y", "@theyahia/kaiten-mcp"],
+      env: {
+        KAITEN_TOKEN: config.KAITEN_TOKEN,
+        ...(config.KAITEN_DOMAIN ? { KAITEN_DOMAIN: config.KAITEN_DOMAIN } : {}),
+      },
+    })

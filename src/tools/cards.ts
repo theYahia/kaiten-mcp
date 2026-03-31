@@ -19,12 +19,23 @@ export async function handleGetCards(params: z.infer<typeof getCardsSchema>): Pr
   return JSON.stringify(result, null, 2);
 }
 
+export const getCardSchema = z.object({
+  card_id: z.number().describe("ID карточки"),
+});
+
+export async function handleGetCard(params: z.infer<typeof getCardSchema>): Promise<string> {
+  const result = await kaitenRequest("GET", `cards/${params.card_id}`);
+  return JSON.stringify(result, null, 2);
+}
+
 export const createCardSchema = z.object({
   title: z.string().describe("Название карточки"),
   board_id: z.number().describe("ID доски"),
   column_id: z.number().describe("ID колонки"),
   description: z.string().optional().describe("Описание карточки"),
   owner_id: z.number().optional().describe("ID владельца карточки"),
+  lane_id: z.number().optional().describe("ID горизонтальной дорожки"),
+  tags: z.array(z.number()).optional().describe("Массив ID тегов"),
 });
 
 export async function handleCreateCard(params: z.infer<typeof createCardSchema>): Promise<string> {
@@ -35,7 +46,27 @@ export async function handleCreateCard(params: z.infer<typeof createCardSchema>)
   };
   if (params.description) body.description = params.description;
   if (params.owner_id) body.owner_id = params.owner_id;
+  if (params.lane_id) body.lane_id = params.lane_id;
+  if (params.tags) body.tag_ids = params.tags;
 
   const result = await kaitenRequest("POST", "cards", body);
+  return JSON.stringify(result, null, 2);
+}
+
+export const updateCardSchema = z.object({
+  card_id: z.number().describe("ID карточки"),
+  title: z.string().optional().describe("Новое название"),
+  description: z.string().optional().describe("Новое описание"),
+  column_id: z.number().optional().describe("ID новой колонки (перемещение)"),
+  owner_id: z.number().optional().describe("ID нового владельца"),
+});
+
+export async function handleUpdateCard(params: z.infer<typeof updateCardSchema>): Promise<string> {
+  const { card_id, ...fields } = params;
+  const body: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(fields)) {
+    if (v !== undefined) body[k] = v;
+  }
+  const result = await kaitenRequest("PATCH", `cards/${card_id}`, body);
   return JSON.stringify(result, null, 2);
 }

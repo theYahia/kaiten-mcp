@@ -1,20 +1,22 @@
 const TIMEOUT = 10_000;
 const MAX_RETRIES = 3;
 
-function getBaseUrl(): string {
+export function getBaseUrl(): string {
   const domain = process.env.KAITEN_DOMAIN;
-  if (!domain) throw new Error("KAITEN_DOMAIN не задан");
-  return `https://${domain}.kaiten.ru/api/latest`;
+  if (domain) {
+    return `https://${domain}.kaiten.ru/api/latest`;
+  }
+  return "https://mykaiten.ru/api/latest";
 }
 
 export async function kaitenRequest(
-  method: "GET" | "POST",
+  method: "GET" | "POST" | "PATCH" | "DELETE",
   endpoint: string,
   body?: Record<string, unknown>,
   params?: Record<string, string>,
 ): Promise<unknown> {
   const token = process.env.KAITEN_TOKEN;
-  if (!token) throw new Error("KAITEN_TOKEN не задан");
+  if (!token) throw new Error("KAITEN_TOKEN не задан. Укажите API-токен из настроек профиля Kaiten.");
 
   const baseUrl = getBaseUrl();
 
@@ -37,7 +39,9 @@ export async function kaitenRequest(
       clearTimeout(timer);
 
       if (response.ok) {
-        return await response.json();
+        const text = await response.text();
+        if (!text) return {};
+        return JSON.parse(text);
       }
 
       if ((response.status === 429 || response.status >= 500) && attempt < MAX_RETRIES) {
@@ -47,7 +51,8 @@ export async function kaitenRequest(
         continue;
       }
 
-      throw new Error(`Kaiten HTTP ${response.status}: ${response.statusText}`);
+      const errBody = await response.text().catch(() => "");
+      throw new Error(`Kaiten HTTP ${response.status}: ${response.statusText}${errBody ? ` — ${errBody}` : ""}`);
     } catch (error) {
       clearTimeout(timer);
       if (error instanceof DOMException && error.name === "AbortError" && attempt < MAX_RETRIES) {
