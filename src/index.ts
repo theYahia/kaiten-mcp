@@ -2,42 +2,93 @@
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { getCardsSchema, handleGetCards, createCardSchema, handleCreateCard } from "./tools/cards.js";
-import { getBoardsSchema, handleGetBoards } from "./tools/boards.js";
+import { listCardsSchema, handleListCards, getCardSchema, handleGetCard, createCardSchema, handleCreateCard, updateCardSchema, handleUpdateCard, moveCardSchema, handleMoveCard, addCardCommentSchema, handleAddCardComment } from "./tools/cards.js";
+import { listBoardsSchema, handleListBoards, listColumnsSchema, handleListColumns } from "./tools/boards.js";
+import { listTagsSchema, handleListTags } from "./tools/tags.js";
+import { listUsersSchema, handleListUsers } from "./tools/users.js";
 
 const server = new McpServer({
   name: "kaiten-mcp",
-  version: "1.0.0",
+  version: "2.0.0",
 });
 
 server.tool(
-  "get_cards",
-  "Получить список карточек Kaiten с фильтрацией по доске и колонке.",
-  getCardsSchema.shape,
-  async (params) => ({ content: [{ type: "text", text: await handleGetCards(params) }] }),
+  "list_boards",
+  "List all boards in Kaiten workspace.",
+  listBoardsSchema.shape,
+  async (params) => ({ content: [{ type: "text", text: await handleListBoards(params) }] }),
+);
+
+server.tool(
+  "list_columns",
+  "List all columns (lanes) of a Kaiten board.",
+  listColumnsSchema.shape,
+  async (params) => ({ content: [{ type: "text", text: await handleListColumns(params) }] }),
+);
+
+server.tool(
+  "list_cards",
+  "List cards with optional filters by board and column.",
+  listCardsSchema.shape,
+  async (params) => ({ content: [{ type: "text", text: await handleListCards(params) }] }),
+);
+
+server.tool(
+  "get_card",
+  "Get a single card by ID with all details.",
+  getCardSchema.shape,
+  async (params) => ({ content: [{ type: "text", text: await handleGetCard(params) }] }),
 );
 
 server.tool(
   "create_card",
-  "Создать новую карточку в Kaiten на указанной доске и колонке.",
+  "Create a new card on a board in a specific column.",
   createCardSchema.shape,
   async (params) => ({ content: [{ type: "text", text: await handleCreateCard(params) }] }),
 );
 
 server.tool(
-  "get_boards",
-  "Получить список досок Kaiten.",
-  getBoardsSchema.shape,
-  async (params) => ({ content: [{ type: "text", text: await handleGetBoards(params) }] }),
+  "update_card",
+  "Update card fields: title, description, owner.",
+  updateCardSchema.shape,
+  async (params) => ({ content: [{ type: "text", text: await handleUpdateCard(params) }] }),
+);
+
+server.tool(
+  "move_card",
+  "Move a card to a different column.",
+  moveCardSchema.shape,
+  async (params) => ({ content: [{ type: "text", text: await handleMoveCard(params) }] }),
+);
+
+server.tool(
+  "add_comment",
+  "Add a comment to a Kaiten card.",
+  addCardCommentSchema.shape,
+  async (params) => ({ content: [{ type: "text", text: await handleAddCardComment(params) }] }),
+);
+
+server.tool(
+  "list_tags",
+  "List all tags in the Kaiten workspace.",
+  listTagsSchema.shape,
+  async (params) => ({ content: [{ type: "text", text: await handleListTags(params) }] }),
+);
+
+server.tool(
+  "list_users",
+  "List all users in the Kaiten workspace.",
+  listUsersSchema.shape,
+  async (params) => ({ content: [{ type: "text", text: await handleListUsers(params) }] }),
 );
 
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("[kaiten-mcp] Сервер запущен. 3 инструмента. Требуется KAITEN_DOMAIN + KAITEN_TOKEN.");
+  console.error("[kaiten-mcp] Server started. 10 tools available.");
 }
 
 main().catch((error) => {
-  console.error("[kaiten-mcp] Ошибка:", error);
+  console.error("[kaiten-mcp] Error:", error);
   process.exit(1);
 });

@@ -8,7 +8,7 @@ function getBaseUrl(): string {
 }
 
 export async function kaitenRequest(
-  method: "GET" | "POST",
+  method: "GET" | "POST" | "PATCH" | "PUT" | "DELETE",
   endpoint: string,
   body?: Record<string, unknown>,
   params?: Record<string, string>,
