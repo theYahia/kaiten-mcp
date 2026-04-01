@@ -1,7 +1,7 @@
 {
   "name": "@theyahia/kaiten-mcp",
-  "version": "3.0.0",
-  "description": "MCP server for Kaiten API — boards, cards, columns, tags, users, comments. 10 tools.",
+  "version": "3.0.1",
+  "description": "MCP server for Kaiten — kanban boards, cards, project management (Russia)",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
@@ -44,7 +44,9 @@
     "russian-api",
     "kaiten",
     "kanban",
-    "project-management"
+    "project-management",
+    "api",
+    "typescript"
   ],
   "license": "MIT",
   "repository": {
