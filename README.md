@@ -1,5 +1,7 @@
 # @theyahia/kaiten-mcp
 
+> 📦 Part of **[WWmcp — Emerging Markets MCP](https://github.com/theYahia/WWmcp)** — 114 MCP servers for non-Western APIs (Brazil/MENA/Gulf/SE Asia/Africa/CIS).
+
 MCP server for **Kaiten** kanban API. **10 tools** for boards, cards, columns, comments, tags, and users.
 
 [![npm](https://img.shields.io/npm/v/@theyahia/kaiten-mcp)](https://www.npmjs.com/package/@theyahia/kaiten-mcp)
@@ -35,6 +37,20 @@ Part of the [Russian API MCP](https://github.com/theYahia/russian-mcp) series by
 ```bash
 claude mcp add kaiten -e KAITEN_DOMAIN=your-domain -e KAITEN_TOKEN=your-token -- npx -y @theyahia/kaiten-mcp
 ```
+
+## Try this prompt
+
+> *"Создай задачу в колонке 'In Progress' доски 'Sprint 23', назначь @alex, добавь тег bug"*
+
+The agent will call `list_boards` → `list_columns` → `create_card` → `list_users` → `update_card` → `list_tags` and chain the operations.
+
+## Pairs well with
+
+- **[planfix-mcp](https://github.com/theYahia/planfix-mcp)** — RU project management / CRM
+- **[megaplan-mcp](https://github.com/theYahia/megaplan-mcp)** — RU all-in-one business platform
+- **[yandex-tracker-mcp](https://github.com/theYahia/yandex-tracker-mcp)** — Yandex's Jira-like tracker
+
+Browse all 114 servers in the [WWmcp catalog](https://github.com/theYahia/WWmcp).
 
 ## Tools (10)
 
@@ -73,3 +89,7 @@ Who are the users in our Kaiten workspace?
 ## License
 
 MIT
+
+---
+
+**Part of [WWmcp](https://github.com/theYahia/WWmcp)** — the emerging-markets MCP catalog. ⭐ Star the catalog if you find these servers useful, and [open an issue](https://github.com/theYahia/WWmcp/issues) to request a server for another non-Western API.
