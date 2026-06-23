@@ -5,7 +5,8 @@
       "args": ["-y", "@theyahia/kaiten-mcp"],
       "env": {
         "KAITEN_DOMAIN": "",
-        "KAITEN_TOKEN": ""
+        "KAITEN_TOKEN": "",
+        "KAITEN_BASE_URL": ""
       }
     }
   }

@@ -1,19 +1,22 @@
 ---
 name: kaiten-boards
-description: Управление карточками и досками в Kaiten
+description: Управление пространствами, досками и карточками в Kaiten
 argument-hint: <действие> [параметры]
 allowed-tools:
   - Bash
   - Read
 ---
 
-# /kaiten-boards — Управление канбан-досками
+# /kaiten-boards — Управление канбан-досками Kaiten
 
 ## Алгоритм
 
-1. Вызови `get_boards` для получения списка досок
-2. Вызови `get_cards` для получения карточек с доски
-3. Вызови `create_card` для создания новой карточки
+1. `list_spaces` — получить список пространств.
+2. `list_boards` (с `space_id`) — доски в пространстве.
+3. `list_columns` / `list_lanes` (с `board_id`) — колонки и дорожки доски.
+4. `list_cards` — карточки с фильтрами (board_id, column_id, query, tag, owner_id, states…).
+5. `create_card` / `update_card` / `move_card` / `delete_card` — действия над карточкой.
+6. `add_comment`, `add_card_member`, `add_card_tag`, `create_checklist` — детали карточки.
 
 ## Формат ответа
 
@@ -29,7 +32,9 @@ allowed-tools:
 ## Примеры
 
 ```
-/kaiten-boards список досок
+/kaiten-boards список пространств
+/kaiten-boards доски в пространстве 5
 /kaiten-boards карточки на доске 123
 /kaiten-boards создать "Новая задача" на доске 123 колонка 456
+/kaiten-boards назначить пользователя 42 на карточку 789 и тег bug
 ```
